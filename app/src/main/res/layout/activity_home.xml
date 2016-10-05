@@ -37,76 +37,11 @@
             app:layout_scrollFlags="scroll|exitUntilCollapsed"
             app:popupTheme="@style/ThemeOverlay.AppCompat.Light">
 
-            <LinearLayout
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:orientation="horizontal">
-                <!--android:paddingBottom="56dp"-->
-                <!--android:paddingLeft="32dp"-->
-                <!--android:paddingRight="16dp"-->
-                <!--android:paddingTop="16dp">-->
+            <include layout="@layout/ws_settings"/>
 
-                <LinearLayout
-                    android:orientation="vertical"
-                    android:layout_width="wrap_content"
-                    android:layout_height="match_parent"
-                    android:layout_gravity="center_vertical"
-                    android:layout_weight="1">
-
-                    <android.support.design.widget.TextInputLayout
-                        android:id="@+id/lNameLayout"
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:layout_below="@+id/fNameLayout"
-                        android:layout_marginTop="10dp"
-                        app:hintTextAppearance="@style/TextAppearence.App.TextInputLayout">
-
-                        <EditText
-                            android:id="@+id/txt_ip"
-                            android:layout_width="match_parent"
-                            android:layout_height="wrap_content"
-                            android:hint="IP Address"/>
-                    </android.support.design.widget.TextInputLayout>
-
-                    <android.support.design.widget.TextInputLayout
-                        android:id="@+id/lNameLayout2"
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:layout_below="@+id/fNameLayout"
-                        android:layout_marginBottom="10dp"
-                        android:layout_marginTop="10dp"
-                        app:hintTextAppearance="@style/TextAppearence.App.TextInputLayout">
-
-                        <EditText
-                            android:id="@+id/txt_port"
-                            android:layout_width="match_parent"
-                            android:layout_height="wrap_content"
-                            android:ems="10"
-                            android:hint="Port" />
-                    </android.support.design.widget.TextInputLayout>
-
-                </LinearLayout>
-
-                <LinearLayout
-                    android:orientation="vertical"
-                    android:layout_width="wrap_content"
-                    android:layout_height="match_parent"
-                    android:layout_weight="1">
-
-                    <Button
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:text="CONNECT"
-                        android:id="@+id/btn_connect"
-                        android:layout_gravity="center"
-                        android:layout_margin="10dp"
-                        android:layout_weight="1" />
-                </LinearLayout>
-
-
-            </LinearLayout>
         </android.support.v7.widget.Toolbar>
-
     </android.support.design.widget.AppBarLayout>
+
+    <include layout="@layout/content_sensor_list"/>
 
 </android.support.design.widget.CoordinatorLayout>
