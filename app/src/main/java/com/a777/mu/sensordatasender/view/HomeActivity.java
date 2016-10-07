@@ -1,5 +1,7 @@
 package com.a777.mu.sensordatasender.view;
 
+import android.content.Context;
+import android.hardware.SensorManager;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.support.v7.widget.LinearLayoutManager;
@@ -11,21 +13,29 @@ import android.widget.EditText;
 import com.a777.mu.sensordatasender.R;
 import com.a777.mu.sensordatasender.contract.SensorListContract;
 import com.a777.mu.sensordatasender.contract.WebSocketContract;
+import com.a777.mu.sensordatasender.model.SensorEventService;
+import com.a777.mu.sensordatasender.presenter.SensorListPresenter;
 import com.a777.mu.sensordatasender.presenter.WebSocketPresenter;
+
+import java.util.List;
 
 public class HomeActivity
         extends AppCompatActivity
-        implements WebSocketContract.View, SensorListContract.View {
+        implements WebSocketContract.View, SensorListContract.View, SensorListAdapter.OnSensorItemClickListener {
 
     private static final String TAG = "HomeActivity";
 
+    private SensorListAdapter sensorListAdapter;
+
     private WebSocketContract.UserActions webSocketPresenter;
     private SensorListContract.UserActions sensorListPresenter;
+
 
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_home);
         webSocketPresenter = new WebSocketPresenter(getApplication(), this);
+        sensorListPresenter = new SensorListPresenter(this, (SensorManager) getSystemService(SENSOR_SERVICE));
         setupViews();
     }
 
@@ -36,12 +46,24 @@ public class HomeActivity
             }
         });
 
-        RecyclerView recyclerView = (RecyclerView)findViewById(R.id.recycler_sensors);
+        RecyclerView recyclerView = (RecyclerView) findViewById(R.id.recycler_sensors);
         recyclerView.setLayoutManager(new LinearLayoutManager(this));
         recyclerView.setHasFixedSize(true);
+        sensorListAdapter = new SensorListAdapter(
+                (Context) this,
+                (SensorListAdapter.OnSensorItemClickListener) this);
+        recyclerView.setAdapter(sensorListAdapter);
 
+    }
 
+    @Override
+    public void startDetailActivity(String sensorName) {
+        SensorDetailActivity.start(this, sensorName);
+    }
 
+    @Override
+    public void updateSensorList(List<SensorEventService.SensorData> data) {
+        sensorListAdapter.updateSensorData(data);
     }
 
     private void onConnectBtnClicked() {
@@ -57,10 +79,25 @@ public class HomeActivity
     @Override
     public void connected() {
         Log.d(TAG, "connected!");
-
     }
 
     @Override
     public void disconnected() {
     }
+
+    @Override
+    public void sendText(String message) {
+        webSocketPresenter.sendText(message);
+    }
+
+    @Override
+    public void onSensorItemClick(SensorEventService.SensorData data) {
+
+    }
+
+    @Override
+    public void onSensorItemSwitchClick(SensorEventService.SensorData data, boolean isChecked) {
+
+    }
+
 }

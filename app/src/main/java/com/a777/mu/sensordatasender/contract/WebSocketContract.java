@@ -11,6 +11,8 @@ public interface WebSocketContract {
         void connected();
 
         void disconnected();
+
+        void sendText(String message);
     }
 
     interface UserActions {
