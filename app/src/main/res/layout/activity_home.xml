@@ -20,28 +20,25 @@
             android:layout_height="wrap_content"
             app:elevation="0dp"
             app:expandedTitleTextAppearance="@style/Widget.AppCompat.ActionBar.TabText"
-            app:layout_scrollFlags="scroll|enterAlways"
+            app:layout_scrollFlags="scroll|enterAlwaysCollapsed"
             app:statusBarScrim="?attr/colorAccent">
 
+            <android.support.v7.widget.Toolbar
+                android:id="@+id/toolbar_2"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:background="@color/colorPrimary"
+                android:minHeight="?attr/actionBarSize"
+                android:theme="@style/ThemeOverlay.AppCompat.Dark.ActionBar"
+                app:elevation="0dp"
+                app:layout_collapseMode="none"
+                app:popupTheme="@style/ThemeOverlay.AppCompat.Light">
+                <include layout="@layout/ws_settings" />
+
+            </android.support.v7.widget.Toolbar>
         </android.support.design.widget.CollapsingToolbarLayout>
-
-        <android.support.v7.widget.Toolbar
-            android:id="@+id/toolbar_2"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:background="@color/colorPrimary"
-            android:minHeight="?attr/actionBarSize"
-            android:theme="@style/ThemeOverlay.AppCompat.Dark.ActionBar"
-            app:elevation="0dp"
-            app:layout_collapseMode="none"
-            app:layout_scrollFlags="scroll|exitUntilCollapsed"
-            app:popupTheme="@style/ThemeOverlay.AppCompat.Light">
-
-            <include layout="@layout/ws_settings"/>
-
-        </android.support.v7.widget.Toolbar>
     </android.support.design.widget.AppBarLayout>
 
-    <include layout="@layout/content_sensor_list"/>
+    <include layout="@layout/content_sensor_list" />
 
 </android.support.design.widget.CoordinatorLayout>
