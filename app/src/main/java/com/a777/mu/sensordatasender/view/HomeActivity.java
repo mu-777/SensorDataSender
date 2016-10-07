@@ -34,9 +34,10 @@ public class HomeActivity
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_home);
+        setupViews();
+
         webSocketPresenter = new WebSocketPresenter(getApplication(), this);
         sensorListPresenter = new SensorListPresenter(this, (SensorManager) getSystemService(SENSOR_SERVICE));
-        setupViews();
     }
 
     private void setupViews() {
@@ -63,6 +64,9 @@ public class HomeActivity
 
     @Override
     public void updateSensorList(List<SensorEventService.SensorData> data) {
+        for (SensorEventService.SensorData d : data) {
+            Log.d(TAG, d.name);
+        }
         sensorListAdapter.updateSensorData(data);
     }
 

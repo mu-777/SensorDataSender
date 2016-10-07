@@ -5,6 +5,7 @@ import android.hardware.SensorEvent;
 import android.hardware.SensorEventListener;
 import android.hardware.SensorManager;
 import android.support.annotation.NonNull;
+import android.util.Log;
 
 import com.a777.mu.sensordatasender.view.SensorListAdapter;
 
@@ -24,6 +25,7 @@ import java.util.StringTokenizer;
  * Created by root on 16/10/05.
  */
 public class SensorEventService implements SensorEventListener {
+    private static final String TAG = "SensorEventService";
 
     private static SensorEventService instance;
     private Map<Integer, SensorData> sensorDataDict;
@@ -44,13 +46,14 @@ public class SensorEventService implements SensorEventListener {
 
         List<Sensor> sensors = sensorManager.getSensorList(Sensor.TYPE_ALL);
         for (Sensor sensor : sensors) {
+            Log.d(TAG, sensor.getName());
             sensorManager.registerListener(this, sensor, sensorManager.SENSOR_DELAY_UI);
             sensorDataDict.put(sensor.getType(), new SensorData(sensor));
         }
     }
 
     public List<SensorData> items() {
-        return (List<SensorData>) sensorDataDict.values();
+        return new ArrayList<SensorData>(sensorDataDict.values());
     }
 
 
@@ -67,8 +70,8 @@ public class SensorEventService implements SensorEventListener {
     public class SensorData {
         public String name;
         public String key;
-        public Map<Integer, Float> dataMap;
-        public Map<Integer, String> dataKeyMap;
+        public Map<Integer, Float> dataMap = new HashMap<Integer, Float>();
+        public Map<Integer, String> dataKeyMap = new HashMap<Integer, String>();
         public boolean isActive = false;
         public Sensor sensor;
         private boolean isInitialized = false;
