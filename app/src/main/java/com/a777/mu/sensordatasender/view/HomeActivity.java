@@ -17,6 +17,9 @@ import com.a777.mu.sensordatasender.model.SensorEventService;
 import com.a777.mu.sensordatasender.presenter.SensorListPresenter;
 import com.a777.mu.sensordatasender.presenter.WebSocketPresenter;
 
+import org.json.JSONException;
+import org.json.JSONObject;
+
 import java.util.List;
 
 public class HomeActivity
@@ -35,9 +38,6 @@ public class HomeActivity
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_home);
         setupViews();
-
-        webSocketPresenter = new WebSocketPresenter(getApplication(), this);
-        sensorListPresenter = new SensorListPresenter(this, (SensorManager) getSystemService(SENSOR_SERVICE));
     }
 
     private void setupViews() {
@@ -54,7 +54,13 @@ public class HomeActivity
                 (Context) this,
                 (SensorListAdapter.OnSensorItemClickListener) this);
         recyclerView.setAdapter(sensorListAdapter);
+    }
 
+    @Override
+    protected void onStart() {
+        super.onStart();
+        webSocketPresenter = new WebSocketPresenter(getApplication(), this);
+        sensorListPresenter = new SensorListPresenter(this, (SensorManager) getSystemService(SENSOR_SERVICE));
     }
 
     @Override
@@ -96,12 +102,17 @@ public class HomeActivity
 
     @Override
     public void onSensorItemClick(SensorEventService.SensorData data) {
+        SensorEventService.print(TAG, data);
 
     }
 
     @Override
     public void onSensorItemSwitchClick(SensorEventService.SensorData data, boolean isChecked) {
-
+        if (isChecked) {
+            sensorListPresenter.enable(data);
+        } else {
+            sensorListPresenter.disable(data);
+        }
     }
 
 }

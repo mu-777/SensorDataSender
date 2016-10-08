@@ -4,20 +4,15 @@ import android.hardware.Sensor;
 import android.hardware.SensorEvent;
 import android.hardware.SensorEventListener;
 import android.hardware.SensorManager;
-import android.support.annotation.NonNull;
 import android.util.Log;
 
-import com.a777.mu.sensordatasender.view.SensorListAdapter;
+import org.json.JSONArray;
+import org.json.JSONException;
+import org.json.JSONObject;
 
 import java.util.ArrayList;
-import java.util.Collection;
-import java.util.Collections;
-import java.util.Dictionary;
 import java.util.HashMap;
-import java.util.Hashtable;
-import java.util.Iterator;
 import java.util.List;
-import java.util.ListIterator;
 import java.util.Map;
 import java.util.StringTokenizer;
 
@@ -29,6 +24,7 @@ public class SensorEventService implements SensorEventListener {
 
     private static SensorEventService instance;
     private Map<Integer, SensorData> sensorDataDict;
+    private List<SensorEventServiceListener> listeners = new ArrayList<>();
 
     public static SensorEventService getInstance(SensorManager sensorManager) {
         if (instance == null) {
@@ -56,10 +52,16 @@ public class SensorEventService implements SensorEventListener {
         return new ArrayList<SensorData>(sensorDataDict.values());
     }
 
+    public void addListener(SensorEventServiceListener listener) {
+        listeners.add(listener);
+    }
 
     @Override
     public void onSensorChanged(SensorEvent sensorEvent) {
         sensorDataDict.get(sensorEvent.sensor.getType()).setData(sensorEvent.values);
+        for (SensorEventServiceListener listener : listeners) {
+            listener.onSensorUpdated(items());
+        }
     }
 
     @Override
@@ -70,8 +72,8 @@ public class SensorEventService implements SensorEventListener {
     public class SensorData {
         public String name;
         public String key;
-        public Map<Integer, Float> dataMap = new HashMap<Integer, Float>();
-        public Map<Integer, String> dataKeyMap = new HashMap<Integer, String>();
+        public Map<Integer, Float> idDataMap = new HashMap<Integer, Float>();
+        public Map<Integer, String> idKeyMap = new HashMap<Integer, String>();
         public boolean isActive = false;
         public Sensor sensor;
         private boolean isInitialized = false;
@@ -82,10 +84,31 @@ public class SensorEventService implements SensorEventListener {
             this.key = this.name;
         }
 
+        private Map<String, Float> getMap() {
+            Map<String, Float> map = new HashMap<String, Float>();
+            if (isInitialized) {
+                for (Map.Entry<Integer, String> pair : idKeyMap.entrySet()) {
+                    map.put(pair.getValue(), idDataMap.get(pair.getKey()));
+                }
+            }
+            return map;
+        }
+
+        public JSONObject getJSON() {
+            JSONObject dataJson = new JSONObject(getMap());
+            JSONObject retJson = new JSONObject();
+            try {
+                retJson.put(this.key, dataJson);
+            } catch (JSONException e) {
+                e.printStackTrace();
+            }
+            return retJson;
+        }
+
         public void setData(float[] dataArr) {
             int i = 0;
             for (float data : dataArr) {
-                dataMap.put(i++, data);
+                idDataMap.put(i++, data);
             }
             if (!isInitialized) {
                 initialize(dataArr);
@@ -95,10 +118,39 @@ public class SensorEventService implements SensorEventListener {
         private void initialize(float[] dataArr) {
             int i = 0;
             for (float data : dataArr) {
-                dataKeyMap.put(i++, ((Integer) i).toString());
+                idKeyMap.put(i++, ((Integer) i).toString());
             }
+            isInitialized = true;
         }
+
 
     }
 
+    public static void print(String tag, SensorData data) {
+        try {
+            Log.d(tag, data.name + ", " + data.getJSON().toString(2));
+        } catch (JSONException e) {
+            e.printStackTrace();
+        }
+    }
+
+    public static boolean isActive(List<SensorData> data) {
+        for (SensorData d : data) {
+            if (d.isActive) {
+                return true;
+            }
+        }
+        return false;
+    }
+
+    public static String sensorData2JsonString(List<SensorData> data) {
+        JSONArray json = new JSONArray();
+        for (SensorData d : data) {
+            if (!d.isActive) {
+                continue;
+            }
+            json.put(d.getJSON());
+        }
+        return json.toString();
+    }
 }

@@ -2,16 +2,13 @@ package com.a777.mu.sensordatasender.view;
 
 import android.content.Context;
 import android.support.v7.widget.RecyclerView;
-import android.text.Layout;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.CompoundButton;
-import android.widget.Switch;
 import android.widget.TextView;
 
 import com.a777.mu.sensordatasender.R;
-import com.a777.mu.sensordatasender.contract.WebSocketContract;
 import com.a777.mu.sensordatasender.model.SensorEventService;
 
 import java.util.List;
@@ -84,12 +81,12 @@ public class SensorListAdapter extends RecyclerView.Adapter<SensorListAdapter.Se
 
     public static class SensorProfileHolder extends RecyclerView.ViewHolder {
         private final TextView sensorName;
-        private final Switch activeSwitch;
+        private final CompoundButton activeSwitch;
 
         public SensorProfileHolder(View itemView) {
             super(itemView);
             sensorName = (TextView) itemView.findViewById(R.id.txt_sensor_name);
-            activeSwitch = (Switch) itemView.findViewById(R.id.btn_sensor);
+            activeSwitch = (CompoundButton) itemView.findViewById(R.id.btn_sensor);
         }
     }
 }

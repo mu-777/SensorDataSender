@@ -21,31 +21,24 @@
             android:layout_width="fill_parent"
             android:layout_height="fill_parent">
 
+            <ToggleButton
+                android:layout_width="wrap_content"
+                android:layout_height="match_parent"
+                android:id="@+id/btn_sensor"
+                android:checked="false"
+                android:layout_margin="0dp" />
+
             <TextView
                 android:id="@+id/txt_sensor_name"
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content"
+                android:layout_height="match_parent"
                 android:maxLines="1"
                 android:textAppearance="@style/TextAppearance.AppCompat.Medium"
                 tools:text="contents"
                 android:layout_margin="10dp"
                 android:gravity="left|center_vertical"
-                android:layout_weight="1"
                 android:ellipsize="end" />
 
-            <Switch
-                android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:id="@+id/btn_sensor"
-                android:layout_alignParentBottom="false"
-                android:layout_alignParentEnd="true"
-                android:layout_alignParentTop="false"
-                android:layout_alignWithParentIfMissing="false"
-                android:layout_alignParentRight="false"
-                android:layout_centerVertical="true"
-                android:checked="false"
-                android:layout_margin="10dp"
-                android:layout_weight="1.5" />
         </LinearLayout>
 
 

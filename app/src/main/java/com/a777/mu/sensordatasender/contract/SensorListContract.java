@@ -13,11 +13,13 @@ public interface SensorListContract {
         void updateSensorList(List<SensorEventService.SensorData> data);
 
         void startDetailActivity(String sensorName);
+
+        void sendText(String message);
     }
 
     interface UserActions {
-        void enable();
+        void enable(SensorEventService.SensorData data);
 
-        void disable();
+        void disable(SensorEventService.SensorData data);
     }
 }
