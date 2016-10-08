@@ -22,7 +22,9 @@
         <!-- <activity android:name=".view.HomeActivity"></activity> -->
         <service
             android:name=".model.WebSocketService"
-            android:exported="false"></service>
+            android:exported="false" />
+
+        <activity android:name=".view.DetailActivity"></activity>
     </application>
 
 </manifest>

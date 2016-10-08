@@ -16,6 +16,7 @@ import com.a777.mu.sensordatasender.contract.WebSocketContract;
 import com.a777.mu.sensordatasender.model.SensorEventService;
 import com.a777.mu.sensordatasender.presenter.SensorListPresenter;
 import com.a777.mu.sensordatasender.presenter.WebSocketPresenter;
+import com.a777.mu.sensordatasender.presenter.WebSocketThreadPresenter;
 
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -59,8 +60,13 @@ public class HomeActivity
     @Override
     protected void onStart() {
         super.onStart();
-        webSocketPresenter = new WebSocketPresenter(getApplication(), this);
+        webSocketPresenter = new WebSocketThreadPresenter(this);
         sensorListPresenter = new SensorListPresenter(this, (SensorManager) getSystemService(SENSOR_SERVICE));
+    }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
     }
 
     @Override
@@ -89,10 +95,12 @@ public class HomeActivity
     @Override
     public void connected() {
         Log.d(TAG, "connected!");
+        sendText("Success to connect!");
     }
 
     @Override
     public void disconnected() {
+        Log.d(TAG, "disconnected!");
     }
 
     @Override

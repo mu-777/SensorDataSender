@@ -36,11 +36,15 @@ public class SensorListPresenter implements SensorListContract.UserActions, Sens
         data.isActive = false;
     }
 
-    @Override
-    public void onSensorUpdated(List<SensorEventService.SensorData> data) {
+    private void sendData(List<SensorEventService.SensorData> data) {
         String jsonStr = SensorEventService.sensorData2JsonString(data);
         if (SensorEventService.isActive(data)) {
             sensorListView.sendText(jsonStr);
         }
+    }
+
+    @Override
+    public void onSensorUpdated(List<SensorEventService.SensorData> data) {
+        sendData(data);
     }
 }

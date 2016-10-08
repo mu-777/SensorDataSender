@@ -21,5 +21,6 @@ public interface SensorListContract {
         void enable(SensorEventService.SensorData data);
 
         void disable(SensorEventService.SensorData data);
+
     }
 }
