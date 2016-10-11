@@ -12,7 +12,7 @@ public interface SensorListContract {
     interface View {
         void updateSensorList(List<SensorEventService.SensorData> data);
 
-        void startDetailActivity(String sensorName);
+        void startDetailActivity(SensorEventService.SensorData data);
 
         void sendText(String message);
     }

@@ -1,3 +1,4 @@
 <resources>
     <string name="app_name">Sensor Data Sender</string>
+    <string name="key_change_fragment_title">Key Change</string>
 </resources>

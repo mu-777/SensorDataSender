@@ -10,6 +10,7 @@ import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -23,7 +24,7 @@ public class SensorEventService implements SensorEventListener {
     private static final String TAG = "SensorEventService";
 
     private static SensorEventService instance;
-    private Map<Integer, SensorData> sensorDataDict;
+    private static Map<Integer, SensorData> sensorDataDict;
     private List<SensorEventServiceListener> listeners = new ArrayList<>();
 
     public static SensorEventService getInstance(SensorManager sensorManager) {
@@ -52,6 +53,10 @@ public class SensorEventService implements SensorEventListener {
         return new ArrayList<SensorData>(sensorDataDict.values());
     }
 
+    public SensorData item(Integer sensorType) {
+        return sensorDataDict.get(sensorType);
+    }
+
     public void addListener(SensorEventServiceListener listener) {
         listeners.add(listener);
     }
@@ -69,22 +74,28 @@ public class SensorEventService implements SensorEventListener {
 
     }
 
-    public class SensorData {
+    public class SensorData implements Serializable {
+        private static final long serialVersionUID = 1L;
+
         public String name;
         public String key;
+        public int type;
         public Map<Integer, Float> idDataMap = new HashMap<Integer, Float>();
         public Map<Integer, String> idKeyMap = new HashMap<Integer, String>();
         public boolean isActive = false;
+        public boolean isFreezed = false;
         public Sensor sensor;
+
         private boolean isInitialized = false;
 
         public SensorData(Sensor sensor) {
             this.sensor = sensor;
             this.name = sensor.getName();
             this.key = this.name;
+            this.type = sensor.getType();
         }
 
-        private Map<String, Float> getMap() {
+        public Map<String, Float> getMap() {
             Map<String, Float> map = new HashMap<String, Float>();
             if (isInitialized) {
                 for (Map.Entry<Integer, String> pair : idKeyMap.entrySet()) {
@@ -106,12 +117,23 @@ public class SensorEventService implements SensorEventListener {
         }
 
         public void setData(float[] dataArr) {
+            if (isFreezed) {
+                return;
+            }
             int i = 0;
             for (float data : dataArr) {
                 idDataMap.put(i++, data);
             }
             if (!isInitialized) {
                 initialize(dataArr);
+            }
+        }
+
+        public void updateDataKeys(String sensorName, ArrayList<String> elementNames) {
+            this.key = sensorName;
+            int i = 0;
+            for (String name : elementNames) {
+                idKeyMap.put(i++, name);
             }
         }
 

@@ -1,22 +1,31 @@
 package com.a777.mu.sensordatasender.contract;
 
-import java.util.List;
+
+import java.util.ArrayList;
+import java.util.Map;
 
 /**
  * Created by ryosuke on 16/10/02.
  */
 public interface SensorDetailContract {
     interface View {
-        List<String> getDataNames();
+        void setDataTable(Map<String, Float> dataMap);
 
-        String getDataKey();
+        void updateDataTable(Map<String, Float> dataMap);
 
+        void setDataName(String dataName);
+
+        void setFreezeButton(boolean flag);
+
+        void showFragment(String sensorName, ArrayList<String> elementNames);
     }
 
     interface UserActions {
-        void enable();
+        void freezeData(boolean flag);
 
-        void disable();
+        void onDataViewClicked();
+
+        void onDataKeysChanged(String sensorName, ArrayList<String> elementNames);
     }
 
 }

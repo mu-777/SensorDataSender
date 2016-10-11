@@ -7,8 +7,10 @@ import android.os.Bundle;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
+import android.view.KeyEvent;
 import android.view.View;
 import android.widget.EditText;
+import android.widget.Toast;
 
 import com.a777.mu.sensordatasender.R;
 import com.a777.mu.sensordatasender.contract.SensorListContract;
@@ -39,6 +41,8 @@ public class HomeActivity
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_home);
         setupViews();
+        webSocketPresenter = new WebSocketThreadPresenter(this);
+        sensorListPresenter = new SensorListPresenter(this, (SensorManager) getSystemService(SENSOR_SERVICE));
     }
 
     private void setupViews() {
@@ -60,8 +64,22 @@ public class HomeActivity
     @Override
     protected void onStart() {
         super.onStart();
-        webSocketPresenter = new WebSocketThreadPresenter(this);
-        sensorListPresenter = new SensorListPresenter(this, (SensorManager) getSystemService(SENSOR_SERVICE));
+    }
+
+    @Override
+    protected void onRestart() {
+        super.onRestart();
+        Log.d(TAG, "restart");
+    }
+
+    @Override
+    public boolean onKeyDown(int keyCode, KeyEvent event) {
+        if (keyCode == KeyEvent.KEYCODE_BACK) {
+            Log.d(TAG, "onKeyDown");
+            sensorListAdapter.notifyDataSetChanged();
+            return true;
+        }
+        return false;
     }
 
     @Override
@@ -70,8 +88,8 @@ public class HomeActivity
     }
 
     @Override
-    public void startDetailActivity(String sensorName) {
-        SensorDetailActivity.start(this, sensorName);
+    public void startDetailActivity(SensorEventService.SensorData data) {
+        DetailActivity.start(this, data);
     }
 
     @Override
@@ -96,6 +114,7 @@ public class HomeActivity
     public void connected() {
         Log.d(TAG, "connected!");
         sendText("Success to connect!");
+        Toast.makeText(HomeActivity.this, "Connected!", Toast.LENGTH_SHORT).show();
     }
 
     @Override
@@ -111,7 +130,7 @@ public class HomeActivity
     @Override
     public void onSensorItemClick(SensorEventService.SensorData data) {
         SensorEventService.print(TAG, data);
-
+        startDetailActivity(data);
     }
 
     @Override

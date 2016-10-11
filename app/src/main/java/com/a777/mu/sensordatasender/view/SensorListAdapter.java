@@ -56,6 +56,7 @@ public class SensorListAdapter extends RecyclerView.Adapter<SensorListAdapter.Se
                 onSensorItemClickListener.onSensorItemClick(item);
             }
         });
+        holder.activeSwitch.setChecked(item.isActive);
         holder.activeSwitch.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
             @Override
             public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
